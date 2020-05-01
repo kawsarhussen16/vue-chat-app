@@ -21,7 +21,10 @@
       </div>
       <div class="row mt-5">
         <div class="col text-center">
-          <button class="btn btn-outline-primary btn-md">
+          <button
+            @click="loginWithTwitter"
+            class="btn btn-outline-primary btn-md"
+          >
             Login with Twitter
           </button>
         </div>
@@ -51,6 +54,20 @@ export default {
       this.errors = [];
       auth
         .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+        .then((res) => {
+          this.$store.dispatch("setUser", res.user);
+          this.$router.push("/");
+        })
+        .catch((err) => {
+          this.errors.push(err.message);
+          this.loading = false;
+        });
+    },
+    loginWithTwitter() {
+      this.loading = true;
+      this.errors = [];
+      auth
+        .signInWithPopup(new firebase.auth.TwitterAuthProvider())
         .then((res) => {
           this.$store.dispatch("setUser", res.user);
           this.$router.push("/");
