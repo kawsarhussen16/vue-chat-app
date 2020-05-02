@@ -15,7 +15,11 @@ const mutations = {
 
 const actions = {
   setUser({ commit }, user) {
-    commit("SET_USER", user);
+    if (user) {
+      commit("SET_USER", user.displayName);
+    } else {
+      commit("SET_USER", null);
+    }
   },
 };
 

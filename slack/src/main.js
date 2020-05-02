@@ -18,13 +18,17 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 // window.firebase = firebase;
-
-new Vue({
-  render: (h) => h(App),
-  router,
-  store,
-}).$mount("#app");
-
+const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+  //dispatch user
+  store.dispatch("setUser", user);
+  new Vue({
+    render: (h) => h(App),
+    router,
+    store,
+  }).$mount("#app");
+  // recursion - this functio calls itself on auth state change
+  unsubscribe();
+});
 export const auth = firebase.auth();
 export const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
