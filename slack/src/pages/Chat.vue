@@ -3,9 +3,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4 sidebar">
-          <h2 class="text-light">#SLACK#</h2>
-          <hr style="border: 1px solid #333;" />
-          <button @click="logout" class="btn btn-outline-light">Logout</button>
+          <SideBar></SideBar>
         </div>
         <div class="col-md-8 content">content</div>
       </div>
@@ -13,9 +11,13 @@
   </div>
 </template>
 <script>
+import SideBar from "../sidebar/Sidebar";
 import firebase from "firebase/app";
 export default {
   name: "chat",
+  components: {
+    SideBar
+  },
   methods: {
     logout() {
       firebase.auth().signOut();
