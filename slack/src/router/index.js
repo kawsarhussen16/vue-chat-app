@@ -2,10 +2,10 @@ import Vue from "vue";
 import Router from "vue-router";
 import Chat from "../pages/Chat.vue";
 import Login from "../pages/Login.vue";
-import firebase, { auth } from "../main";
+import firebase from "firebase/app";
 
 Vue.use(Router);
-console.log(auth);
+
 export default new Router({
   routes: [
     {

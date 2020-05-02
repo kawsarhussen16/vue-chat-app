@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/database";
 import store from "./store";
 
 Vue.config.productionTip = false;
@@ -29,9 +30,5 @@ const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
   // recursion - this functio calls itself on auth state change
   unsubscribe();
 });
-export const auth = firebase.auth();
-export const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: "select_account" });
-export const GoogleLogin = () => auth.signInWithPopup(provider);
 
 export default firebase;
