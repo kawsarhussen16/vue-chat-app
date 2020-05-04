@@ -1,6 +1,14 @@
 <template>
   <div>
     <button @click="openModal" class="btn btn-outline-primary">Add Channel</button>
+    <!-- show all channels -->
+    <div class="mt-4">
+      <button
+        v-for="channel in channels"
+        :key="channel"
+        class="list-group-item list-group-item-action"
+      >{{channel.name}}</button>
+    </div>
     <div class="modal fade" id="channelModal">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -51,7 +59,8 @@ export default {
     return {
       new_channel: "",
       errors: [],
-      channelRef: firebase.database().ref("channels")
+      channelRef: firebase.database().ref("channels"),
+      channels: []
     };
   },
   computed: {
@@ -66,6 +75,7 @@ export default {
         .modal("show");
     },
     addChannel() {
+      this.errors = [];
       let key = this.channelRef.push().key;
       let newChannel = { id: key, name: this.new_channel };
       this.channelRef
@@ -73,12 +83,28 @@ export default {
         .update(newChannel)
         .then(() => {
           this.new_channel = "";
-          $("channelModal").modal("hide");
+          $("#channelModal").modal("hide");
         })
         .catch(error => {
           this.errors.push(error.message);
         });
+    },
+    addListeners() {
+      console.log("add event");
+      this.channelRef.on("child_added", snapshot => {
+        this.channels.push(snapshot.val());
+      });
+    },
+    detachListeners() {
+      //before destory we let firebase to stop listenning
+      this.channelRef.off();
     }
+  },
+  mounted() {
+    this.addListeners();
+  },
+  beforeDestroy() {
+    this.detachListeners();
   }
 };
 </script>
