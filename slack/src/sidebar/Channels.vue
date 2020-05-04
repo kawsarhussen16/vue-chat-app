@@ -7,6 +7,8 @@
         v-for="channel in channels"
         :key="channel"
         class="list-group-item list-group-item-action"
+        :class="{'active': setActiveChannel(channel)}"
+        @click="changeChannel(channel)"
       >{{channel.name}}</button>
     </div>
     <div class="modal fade" id="channelModal">
@@ -50,6 +52,7 @@
 
 <script>
 import firebase from "firebase/app";
+import { mapGetters } from "vuex";
 require("firebase/database");
 import $ from "jquery";
 require("bootstrap/js/dist/modal");
@@ -60,10 +63,12 @@ export default {
       new_channel: "",
       errors: [],
       channelRef: firebase.database().ref("channels"),
-      channels: []
+      channels: [],
+      curentChannel: null
     };
   },
   computed: {
+    ...mapGetters(["currentChannel"]),
     hasErrors() {
       return this.errors.length > 0;
     }
@@ -90,14 +95,24 @@ export default {
         });
     },
     addListeners() {
-      console.log("add event");
       this.channelRef.on("child_added", snapshot => {
         this.channels.push(snapshot.val());
+        if (this.channels.length > 0) {
+          this.curentChannel = this.channels[0];
+          this.$store.dispatch("setCurrentChannel", this.curentChannel);
+        }
       });
+    },
+    changeChannel(channel) {
+      this.$store.dispatch("setCurrentChannel", channel);
     },
     detachListeners() {
       //before destory we let firebase to stop listenning
       this.channelRef.off();
+    },
+    // setActiveChannel
+    setActiveChannel(channel) {
+      return channel.id === this.currentChannel.id;
     }
   },
   mounted() {
