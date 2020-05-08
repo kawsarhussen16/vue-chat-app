@@ -5,7 +5,9 @@
         <div class="col-md-4 sidebar">
           <SideBar></SideBar>
         </div>
-        <div class="col-md-8 content">content</div>
+        <div class="col-md-8 content">
+          <Messages />
+        </div>
       </div>
     </div>
   </div>
@@ -13,10 +15,12 @@
 <script>
 import SideBar from "../sidebar/Sidebar";
 import firebase from "firebase/app";
+import Messages from "../messages/Messages";
 export default {
   name: "chat",
   components: {
-    SideBar
+    SideBar,
+    Messages
   },
   methods: {
     logout() {
